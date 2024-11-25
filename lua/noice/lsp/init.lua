@@ -51,15 +51,15 @@ function M.scroll(delta)
 end
 
 function M.hover()
-  ---@diagnostic disable-next-line: missing-parameter
-  local params = vim.lsp.util.make_position_params()
-  vim.lsp.buf_request(0, "textDocument/hover", params, require("noice.lsp.hover").on_hover)
+  vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_hover, function(client)
+    return vim.lsp.util.make_position_params(nil, client.offset_encoding)
+  end, require("noice.lsp.hover").on_hover)
 end
 
 function M.signature()
-  ---@diagnostic disable-next-line: missing-parameter
-  local params = vim.lsp.util.make_position_params()
-  vim.lsp.buf_request(0, "textDocument/signatureHelp", params, require("noice.lsp.signature").on_signature)
+  vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_signatureHelp, function(client)
+    return vim.lsp.util.make_position_params(nil, client.offset_encoding)
+  end, require("noice.lsp.signature").on_signature)
 end
 
 return M
